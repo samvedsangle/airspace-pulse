@@ -88,10 +88,151 @@ bootstrap_reference_data()
 st.markdown(
     """
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        html, body, [class*="css"], .stApp, .stMarkdown, button, input, select, textarea {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
         .stApp {
             background: radial-gradient(circle at 12% 0%, rgba(28, 94, 109, 0.32), transparent 32%), linear-gradient(180deg, #06131b 0%, #0b1d24 100%);
             color: #edf6ff;
         }
+        h1, h2, h3 { letter-spacing: -0.01em; }
+        [data-testid="stHeading"] h2, [data-testid="stHeading"] h3 {
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+            padding-bottom: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Branded top bar replacing the plain title */
+        .enterprise-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1.15rem 1.5rem;
+            margin-bottom: 1.1rem;
+            background: linear-gradient(135deg, rgba(17, 46, 58, 0.92), rgba(8, 22, 29, 0.96));
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 1rem;
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+        }
+        .enterprise-header .brand { display: flex; align-items: center; gap: 0.95rem; }
+        .enterprise-header .brand-mark {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+            border-radius: 0.8rem;
+            background: linear-gradient(135deg, var(--mood-accent, #6ef0a7), rgba(110, 240, 167, 0.35));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 0 22px rgba(110, 240, 167, 0.3);
+        }
+        .enterprise-header h1 {
+            margin: 0;
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #f8fbff;
+            line-height: 1.2;
+        }
+        .enterprise-header .tagline {
+            margin: 0.1rem 0 0 0;
+            font-size: 0.82rem;
+            color: #9eb7cf;
+            font-weight: 500;
+        }
+        .enterprise-header .meta {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* KPI tile strip */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+            gap: 0.85rem;
+            margin: 1.1rem 0 1.4rem 0;
+        }
+        .kpi-card {
+            background: linear-gradient(180deg, rgba(20, 48, 57, 0.92), rgba(11, 29, 35, 0.94));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 0.85rem;
+            padding: 0.95rem 1.05rem;
+            transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(110, 240, 167, 0.55);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+        }
+        .kpi-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9eb7cf;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+        .kpi-value { font-size: 1.55rem; font-weight: 800; color: #f8fbff; }
+        .kpi-mood .kpi-value { color: var(--mood-accent, #f8fbff); }
+
+        /* Expanders as elevated cards */
+        [data-testid="stExpander"] {
+            border: 1px solid rgba(148, 163, 184, 0.18) !important;
+            border-radius: 0.85rem !important;
+            background: rgba(15, 35, 44, 0.55);
+            overflow: hidden;
+        }
+        [data-testid="stExpander"] summary {
+            font-weight: 600;
+            padding: 0.7rem 1rem !important;
+        }
+        [data-testid="stExpander"] summary:hover { color: #6ef0a7; }
+
+        /* Segmented-control style tabs */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 0.3rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        }
+        .stTabs [data-baseweb="tab"] {
+            border-radius: 0.6rem 0.6rem 0 0;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            color: #9eb7cf;
+        }
+        .stTabs [aria-selected="true"] {
+            color: #6ef0a7 !important;
+            background: rgba(110, 240, 167, 0.08);
+        }
+
+        /* Buttons */
+        .stButton > button, .stDownloadButton > button {
+            border-radius: 0.6rem;
+            font-weight: 600;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .stButton > button:hover, .stDownloadButton > button:hover {
+            border-color: rgba(110, 240, 167, 0.6);
+            box-shadow: 0 0 14px rgba(110, 240, 167, 0.18);
+            color: #6ef0a7;
+        }
+        .stButton > button[kind="primary"] {
+            background: linear-gradient(135deg, #26b875, #1c8f5c);
+            border: none;
+        }
+
+        /* Inputs */
+        div[data-baseweb="select"] > div, .stNumberInput input, .stTextInput input {
+            border-radius: 0.55rem !important;
+        }
+
+        /* Sidebar polish */
+        section[data-testid="stSidebar"] .block-container { padding-top: 1.25rem; }
         /* Streamlit dims every widget to 33% opacity via [data-stale="true"]
            while a script rerun is in flight, as a "this is about to update"
            cue. That's fine on a typical <1s rerun, but ours can run for many
@@ -185,9 +326,21 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Airspace Pulse")
 st.markdown(
-    '<div class="status-pill"><span class="status-dot"></span> LIVE</div> Aircraft activity around monitored airports',
+    """
+    <div class="enterprise-header">
+        <div class="brand">
+            <div class="brand-mark">🛫</div>
+            <div>
+                <h1>Airspace Pulse</h1>
+                <p class="tagline">Real-time national airspace intelligence &amp; network analytics</p>
+            </div>
+        </div>
+        <div class="meta">
+            <div class="status-pill"><span class="status-dot"></span> LIVE</div>
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 st.caption(
@@ -519,13 +672,22 @@ with st.expander("Watchlist and geofence"):
         st.metric("Aircraft inside geofence", int(inside_geofence["flight_id"].nunique()))
 
 snapshot_date_label = selected_date.strftime("%Y-%m-%d")
-col1, col2, col3, col4, col5, col6 = st.columns(6)
-col1.metric("Snapshot date", snapshot_date_label)
-col2.metric("Aircraft observed", int(cities["total_aircraft"].sum()))
-col3.metric("Airborne now", airborne_count)
-col4.metric("Monitored cities", int(cities["destination_city"].nunique()))
-col5.metric("Overflight index", overflight_index)
-col6.metric("Airspace mood", mood_label(mood_score))
+kpi_tiles = [
+    ("📅", "Snapshot date", snapshot_date_label, False),
+    ("✈️", "Aircraft observed", f"{int(cities['total_aircraft'].sum()):,}", False),
+    ("🛰️", "Airborne now", f"{airborne_count:,}", False),
+    ("🏙️", "Monitored cities", int(cities["destination_city"].nunique()), False),
+    ("📈", "Overflight index", overflight_index, False),
+    ("🌡️", "Airspace mood", mood_label(mood_score), True),
+]
+kpi_html = '<div class="kpi-grid">' + "".join(
+    f'<div class="kpi-card{" kpi-mood" if is_mood else ""}">'
+    f'<div class="kpi-label">{icon} {label}</div>'
+    f'<div class="kpi-value">{value}</div>'
+    f'</div>'
+    for icon, label, value, is_mood in kpi_tiles
+) + "</div>"
+st.markdown(kpi_html, unsafe_allow_html=True)
 
 with st.expander("Live radar scope"):
     radar_points = selected_aircraft.dropna(subset=["lat", "lon"]).copy()
