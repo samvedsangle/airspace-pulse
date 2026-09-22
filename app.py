@@ -92,6 +92,19 @@ st.markdown(
             background: radial-gradient(circle at 12% 0%, rgba(28, 94, 109, 0.32), transparent 32%), linear-gradient(180deg, #06131b 0%, #0b1d24 100%);
             color: #edf6ff;
         }
+        /* Streamlit dims every widget to 33% opacity via [data-stale="true"]
+           while a script rerun is in flight, as a "this is about to update"
+           cue. That's fine on a typical <1s rerun, but ours can run for many
+           seconds to over a minute (live network calls to ~50 airports,
+           sometimes rate-limited) — long enough that 33% opacity on our
+           already-dark theme read as "broken", not "loading". Keep it
+           legible; still visibly dimmed so the cue isn't lost entirely. */
+        [data-testid="stElementContainer"][data-stale="true"],
+        [data-testid="stVerticalBlock"][data-stale="true"],
+        [data-testid="stHorizontalBlock"][data-stale="true"] {
+            opacity: 0.92 !important;
+            transition: opacity 0.2s ease;
+        }
         div[data-testid="stSidebar"] {
             background: #091a2a;
         }
