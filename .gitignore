@@ -1,0 +1,16 @@
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.claude/
+
+data/
+
+# Unrelated to this project (leftover from local tooling, not used by app.py)
+litellm-config.yaml
+
+mobility_transform/dev.duckdb
+mobility_transform/logs/
+
+.env
+*.env
